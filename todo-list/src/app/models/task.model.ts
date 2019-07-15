@@ -5,5 +5,6 @@ export class Task {
     dueDate: Date;
     reminder: boolean;
     priority: number;
-    id: string;
+    taskId: string;
+    listId: string;
 }

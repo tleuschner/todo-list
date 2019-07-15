@@ -7,5 +7,6 @@ export class List {
     doneTasks: number;
     priority: number;
     title: string;
-    id: string;
+    listId: string;
+    userId: string;
 }

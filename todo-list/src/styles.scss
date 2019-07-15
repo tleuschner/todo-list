@@ -1,0 +1,30 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+.rgba-primary-0 { color: rgba( 80, 13,117,1) }	/* Main Primary color */
+.rgba-primary-1 { color: rgba(117, 54,151,1) }
+.rgba-primary-2 { color: rgba(100, 25,141,1) }
+.rgba-primary-3 { color: rgba( 64,  5, 97,1) }
+.rgba-primary-4 { color: rgba( 47,  2, 72,1) }
+
+$rgba-primary-0 : rgba( 80, 13,117,1); 	/* Main Primary color */
+$rgba-primary-1 : rgba(117, 54,151,1); 
+$rgba-primary-2 : rgba(100, 25,141,1); 
+$rgba-primary-3 : rgba( 64,  5, 97,1); 
+$rgba-primary-4 : rgba( 47,  2, 72,1); 
+
+  html {
+    height: 100%;
+}
+
+
+body { 
+  height: 100%;
+    font-family: Roboto, Arial, sans-serif;
+    margin: 0;
+  }
+  
+  .basic-container {
+    padding: 30px;
+    height: 100%;
+  }
