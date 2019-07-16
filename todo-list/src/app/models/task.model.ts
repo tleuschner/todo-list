@@ -2,9 +2,8 @@ export class Task {
     title: string;
     description: string;
     done: boolean;
-    dueDate: Date;
+    dueDate: number;
     reminder: boolean;
     priority: number;
-    taskId: string;
     listId: string;
 }

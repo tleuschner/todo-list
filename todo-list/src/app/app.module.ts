@@ -1,11 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 import { NgModule } from '@angular/core';
-
+import { NgModel } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-
 import { environment } from "../environments/environment";
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -13,22 +11,28 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/auth'
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireModule } from "@angular/fire";
-import { AngularFireDatabaseModule } from "@angular/fire/database";
+import { AngularFireDatabaseModule, AngularFireDatabase } from "@angular/fire/database";
 
 //Material
 import { MaterialModule } from '../material-module';
 
 //Components
 import { LoginSignupComponent } from './users/login-signup/login-signup.component';
-import { OverviewComponent } from './users/overview/overview.component';
+import { OverviewComponent, CreateListDialog } from './users/overview/overview.component';
 import { AngularFireAuthGuard } from '@angular/fire/auth-guard';
+import { TodoListComponent } from './users/todo-list/todo-list.component';
+import { TodoTaskComponent } from './users/todo-task/todo-task.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginSignupComponent,
-    OverviewComponent
+    OverviewComponent,
+    TodoListComponent,
+    TodoTaskComponent,
+    CreateListDialog,
+    NgModel,
   ],
   imports: [
     BrowserModule,
@@ -37,13 +41,15 @@ import { AngularFireAuthGuard } from '@angular/fire/auth-guard';
     AngularFireModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
-    MaterialModule
+    MaterialModule,
   ],
   providers: [
     AngularFireAuth,
     AngularFirestore,
-    AngularFireAuthGuard
+    AngularFireAuthGuard,
+    AngularFireDatabase,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [OverviewComponent, CreateListDialog]
 })
 export class AppModule { }

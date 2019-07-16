@@ -1,12 +1,11 @@
-import { Task } from './task.model';
-
 export class List {
-    task: Task[];
-    created: Date;
-    remainingTasks: number;
-    doneTasks: number;
-    priority: number;
-    title: string;
-    listId: string;
-    userId: string;
+    created?: number;
+    taskCount?: number;
+    remainingTasks?: number;
+    doneTasks?: number;
+    priority?: number;
+    title?: string;
+    description?: string;
+    uid?: string;
+    userId?: string;
 }

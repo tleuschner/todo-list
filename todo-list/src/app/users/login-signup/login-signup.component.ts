@@ -33,7 +33,8 @@ export class LoginSignupComponent implements OnInit {
   async signUpLogin() {
     if (this.newUser) {
       await this.authService.emailSignUp(this.userForm.value['email'], this.userForm.value['passwordRegister']);
-      this.messageService.msg.subscribe(msg => this._snackBar.open(msg.content, 'Okay'))
+      this.messageService.msg.subscribe(msg => this._snackBar.open(msg.content, 'Okay'));
+      await this.router.navigate(['/']);
     } else {
       await this.authService.emailLogin(this.userForm.value['email'], this.userForm.value['passwordLogin']);
       this.messageService.msg.subscribe(msg => this._snackBar.open(msg.content, 'Okay'))

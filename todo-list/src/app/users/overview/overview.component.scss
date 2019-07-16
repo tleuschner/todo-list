@@ -1,0 +1,24 @@
+.material-icons {
+    font-size: 48px;
+}
+
+.material-icons:hover {
+    cursor: pointer;
+}
+
+.centered {
+    min-height:48px;
+    width: 100%;
+    padding-top: 5rem;
+    display: flex;
+    // align-items: center;
+    justify-content: center;
+}
+
+.max-height {
+    height: 100%
+}
+
+mat-form-field {
+    width: 100%
+}
