@@ -1,0 +1,11 @@
+<mat-card class="add-padding" [class.done]="done">
+    <mat-card-title>
+        <h5>{{task.title}}</h5>
+    </mat-card-title>
+    <mat-card-content *ngIf="task.description">
+        <div class="description"> {{task.description}} </div>
+    </mat-card-content>
+    <mat-card-subtitle [class.overdue]="task.dueDate - now > 0">
+        Aufgabe zu erledigen bis {{todoList.remainingTasks}}
+    </mat-card-subtitle>
+</mat-card>

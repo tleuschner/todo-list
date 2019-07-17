@@ -22,7 +22,7 @@
 
 
     <div mat-dialog-actions>
-        <button mat-button [mat-dialog-close]="data" [disabled]="!listForm.valid">Erstellen</button>
+        <button mat-button [mat-dialog-close]="data" cdkFocusInitial [disabled]="!listForm.valid">Erstellen</button>
         <button mat-button (click)="onNoClick()">Abbrechen</button>
     </div>
 </div>

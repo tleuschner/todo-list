@@ -1,10 +1,10 @@
 <mat-card class="add-padding">
     <mat-card-title>
-        <h4>{{todoList.title}}</h4>
+        <h4>{{todoList.title}}</h4> <span class="description">{{todoList.description}}</span>
     </mat-card-title>
     <mat-card-content>
-        <div class="description"> {{todoList.description}} </div>
         <div class="container-flex">
+            <app-todo-task [todoList]="todoList"></app-todo-task>
             <i class="material-icons">
                 note_add
             </i>

@@ -19,7 +19,8 @@ export class OverviewComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.taskService.getToDoLists().snapshotChanges().subscribe(res => {
+    this.taskService.getToDoLists().valueChanges().subscribe((res:any) => {
+      this.todoLists = res;
       console.log(res);
     })
   }

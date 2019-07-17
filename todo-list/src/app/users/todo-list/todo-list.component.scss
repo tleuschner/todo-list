@@ -19,6 +19,7 @@ mat-card-subtitle {
 h4 {
     padding: 8px 20px;
     margin: 0;
+    display: inline-block;
 }
 
 .add-padding {
@@ -30,4 +31,9 @@ h4 {
     display: flex;
     flex-flow: row wrap;
     justify-content: flex-start;
+}
+
+.description {
+    float: right;
+    margin: 8px 20px;
 }
