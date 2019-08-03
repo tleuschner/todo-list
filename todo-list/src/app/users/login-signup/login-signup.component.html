@@ -1,15 +1,13 @@
-<h1></h1>
+<h1 class="heading">Task Runner</h1>
 
-<p>Es ist Zeit, erhalte endlich die Kontrolle über Dein Leben zurück! Du bist nur noch einen Klick </p>
-
-<form [formGroup]="userForm" *ngIf="newUser" (ngSubmit)="signUpLogin()">
+<form [formGroup]="userForm" [hidden]="!showSignup" (ngSubmit)="signUp()">
     <mat-card>
         <mat-card-title>
             <h3>Registrieren</h3>
         </mat-card-title>
         <div class="padding">
             <mat-card-subtitle>
-                <button type="button" mat-raised-button color="basic" (click)="toggleForm()">Bereits
+                <button class="color-secondary" type="button" mat-raised-button (click)="toggleForm()">Bereits
                     registriert?</button>
             </mat-card-subtitle>
             <mat-card-content>
@@ -22,14 +20,16 @@
                 <mat-form-field>
                     <label for="password"></label>
                     <input matInput [type]="!hide ? 'password' : 'text'" placeholder="Passwort eingeben"
-                        formControlName="passwordRegister" [required]="newUser">
+                        formControlName="passwordRegister" required>
                     <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' :'visibility_off'}}</mat-icon>
                     <mat-error *ngIf="formErrors.passwordRegister">{{ formErrors.passwordRegister }}</mat-error>
                 </mat-form-field>
-                <!-- <mat-form-field>
-                            <label for="repeatPassowrd"></label>
-                            <input matInput type="password" placeholder="Passwort wiederholen" formControlName="repeatPassowrd" required>
-                        </mat-form-field> -->
+                <mat-form-field>
+                    <label for="repeatPassword"></label>
+                    <input matInput type="password" placeholder="Passwort wiederholen" formControlName="repeatPassword"
+                        [errorStateMatcher]="matcher" required>
+                    <mat-error *ngIf="userForm.hasError('notSame')">Die Passwörter müssen übereinstimmen</mat-error>
+                </mat-form-field>
                 <div class="button-row">
                     <button mat-raised-button color="primary" type="submit"
                         [disabled]="!userForm.valid">Registrieren</button>
@@ -41,41 +41,11 @@
     </mat-card>
 </form>
 
-<form [formGroup]="userForm" *ngIf="!newUser" (ngSubmit)="signUpLogin()">
-    <mat-card>
-        <mat-card-title>
-            <h3>Login</h3>
-        </mat-card-title>
-        <div class="padding">
-            <mat-card-subtitle>
-                <button type="button" mat-raised-button color="basic" (click)="toggleForm()">Noch nicht
-                    registriert?</button>
-            </mat-card-subtitle>
-            <mat-card-content>
-                <mat-form-field>
-                    <label for="email"></label>
-                    <input matInput type="email" placeholder="Email eingeben" formControlName="email" required>
-                    <mat-error *ngIf="formErrors.email">{{ formErrors.email }}</mat-error>
-                </mat-form-field>
+<app-login></app-login>
 
-                <mat-form-field>
-                    <label for="password"></label>
-                    <input matInput [type]="!hide ? 'password' : 'text'" placeholder="Passwort eingeben"
-                        formControlName="passwordLogin">
-                    <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' :'visibility_off'}}</mat-icon>
-                    <mat-error *ngIf="formErrors.passwordLogin">{{ formErrors.passwordLogin }}</mat-error>
-                </mat-form-field>
-                <!-- <mat-form-field>
-                                <label for="repeatPassowrd"></label>
-                                <input matInput type="password" placeholder="Passwort wiederholen" formControlName="repeatPassowrd" required>
-                            </mat-form-field> -->
-                <div class="button-row">
-                    <button mat-raised-button color="primary" type="submit"
-                        [disabled]="!userForm.valid">Einloggen</button>
-                    <button mat-raised-button color="primary" type="button" (click)="signInWithGoogle()">Mit Google
-                        anmelden</button>
-                </div>
-            </mat-card-content>
-        </div>
-    </mat-card>
-</form>
+<p class="black-text">Es ist soweit! Erhalte die Kontrolle über dein Leben zurück!</p>
+
+<p class="black-text">
+    Vergiss nie wieder eine wichtige Aufgabe und organisiere sowie optimiere dich selbst.
+    Es war nie einfacher, jetzt registrieren und profitieren.
+</p>

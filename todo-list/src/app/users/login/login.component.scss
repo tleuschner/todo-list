@@ -1,0 +1,45 @@
+@import '~variables.scss';
+
+mat-form-field {
+    width: 100%
+}
+mat-card-title {
+    color: rgba(255, 255, 255, 1);
+    background: $primary-main;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+mat-card {
+    padding: 0px;
+    background: rgba(255, 255, 255, 1);
+}
+
+.padding {
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 16px;
+}
+
+h3 {
+    padding: 8px 20px;
+}
+
+.button-row button{
+    margin-right: 8px;
+}
+
+.color-secondary {
+    background: $secondary-light-half;
+}
+
+.black-text {
+    font-size: 18px;
+    color: rgba(0,0,0,0.7);
+}
+
+.heading {
+    color: rgba(255, 255, 255, 1);
+    text-align: center;
+    font-style: italic;
+}

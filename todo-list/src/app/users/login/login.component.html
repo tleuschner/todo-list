@@ -1,0 +1,35 @@
+<form [formGroup]="userForm" [hidden]="showSignup" (ngSubmit)="login()">
+    <mat-card>
+        <mat-card-title>
+            <h3>Login</h3>
+        </mat-card-title>
+        <div class="padding">
+            <mat-card-subtitle>
+                <button class="color-secondary" type="button" mat-raised-button (click)="toggleForm()">Noch nicht
+                    registriert?</button>
+            </mat-card-subtitle>
+            <mat-card-content>
+                <mat-form-field>
+                    <label for="email"></label>
+                    <input matInput type="email" placeholder="Email eingeben" formControlName="email"
+                        required>
+                    <mat-error *ngIf="formErrors.email">{{ formErrors.email }}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <label for="password"></label>
+                    <input matInput [type]="!hide ? 'password' : 'text'" placeholder="Passwort eingeben"
+                        formControlName="passwordLogin" required>
+                    <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' :'visibility_off'}}</mat-icon>
+                    <mat-error *ngIf="formErrors.passwordLogin">{{ formErrors.passwordLogin }}</mat-error>
+                </mat-form-field>
+                <div class="button-row">
+                    <button mat-raised-button color="primary" type="submit"
+                        [disabled]="!userForm.valid">Einloggen</button>
+                    <button mat-raised-button color="primary" type="button" (click)="signInWithGoogle()">Mit Google
+                        anmelden</button>
+                </div>
+            </mat-card-content>
+        </div>
+    </mat-card>
+</form>

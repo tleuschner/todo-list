@@ -1,16 +1,31 @@
-<mat-card class="add-padding">
-    <mat-card-title>
-        <h4>{{todoList.title}}</h4> <span class="description">{{todoList.description}}</span>
+<mat-card class="list" [class.isActive]="showTodos">
+    <mat-card-title (click)="toggleTodos()" class="clickable flex-full-width no-margin">
+        <h4>{{todoList.title}}</h4>
+        <div class="centered"><i class="material-icons md-48">{{icon}}</i></div>
     </mat-card-title>
-    <mat-card-content>
-        <div class="container-flex">
-            <app-todo-task [todoList]="todoList"></app-todo-task>
-            <i class="material-icons">
-                note_add
-            </i>
+    <mat-card-content *ngIf="showTodos">
+        <div *ngIf="tasks" cdkDropList (cdkDropListDropped)="drop($event)">
+            <div *ngFor="let task of tasks" cdkDrag>
+                <app-todo-task [task]="task"></app-todo-task>
+            </div>
+        </div>
+        <form>
+            <mat-form-field class="full-width">
+                <input #taskTitle matInput placeholder="Neue Aufgabe hinzufügen" autocomplete="off"
+                    (keyup.enter)="addTask()" (blur)="addTask()" />
+            </mat-form-field>
+        </form>
+        <div class="flex-full-width pull-right">
+            <span class="center-vertically">
+                <i class="material-icons clickable" (click)="delete()"> delete </i>
+            </span>
+            <span style="padding-left: 1em"></span>
+            <span class="center-vertically">
+                <i class="material-icons clickable" (click)="settings()"> settings </i>
+            </span>
         </div>
     </mat-card-content>
-    <mat-card-subtitle>
-        {{todoList.remainingTasks}} Aufgaben zu erledigen, XX Aufgaben überfällig
+    <mat-card-subtitle class="no-margin">
+        {{todoList.remainingTasks}} zu erledigen, {{overdue}} überfällig
     </mat-card-subtitle>
 </mat-card>

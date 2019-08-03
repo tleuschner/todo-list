@@ -6,6 +6,6 @@ export class List {
     priority?: number;
     title?: string;
     description?: string;
-    uid?: string;
-    userId?: string;
+    listId?: string;
+    taksIds?: string[];
 }

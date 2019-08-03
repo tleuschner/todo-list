@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 export interface Msg {
   content: string;
@@ -13,7 +13,7 @@ export interface Msg {
 
 export class MessageService {
 
-  private $msgSource = new BehaviorSubject<Msg>({content:'', style: ''});
+  private $msgSource = new Subject<Msg>();
 
   msg = this.$msgSource.asObservable();
 

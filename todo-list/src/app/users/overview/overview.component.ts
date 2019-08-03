@@ -1,47 +1,66 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { TaskService } from 'src/app/core/task.service';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
 import { List } from 'src/app/models/list.model';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/core/auth.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { DataService } from 'src/app/core/data.service';
 
 @Component({
   selector: 'app-overview',
   templateUrl: './overview.component.html',
   styleUrls: ['./overview.component.scss']
 })
-export class OverviewComponent implements OnInit {
+export class OverviewComponent implements OnInit, OnDestroy {
   public todoLists: List[];
-  private newList: List = { };
+  private newList: List = {};
+  userEmail = '';
+  private destroy$ = new Subject<boolean>();
 
   constructor(
-    private taskService: TaskService,
-    public dialog: MatDialog
+    private dataService: DataService,
+    public dialog: MatDialog,
+    private router: Router,
+    private authService: AuthService,
   ) { }
 
   ngOnInit() {
-    this.taskService.getToDoLists().valueChanges().subscribe((res:any) => {
-      this.todoLists = res;
-      console.log(res);
-    })
+    this.dataService.initalize();
+    this.dataService.getTodoLists().pipe(takeUntil(this.destroy$)).subscribe((lists: List[]) => {
+      this.todoLists = lists.sort( (a: List, b: List) => a.created - b.created);
+    });
   }
 
-  
+
   createList() {
     const dialogRef = this.dialog.open(CreateListDialog, {
-      width: '50%',
-      height: '50%',
+      width: '90vw',
+      maxWidth: '700px',
       data: this.newList
     });
 
-    dialogRef.afterClosed().subscribe((result:List) => {
-      if(result !== undefined) {
+    dialogRef.afterClosed().subscribe((result: List) => {
+      if (result != undefined) {
         result.created = Date.now();
         result.doneTasks = 0;
         result.remainingTasks = 0;
+        this.dataService.createToDoList(result);
       }
-      this.taskService.createList(result);
       this.newList = {};
     })
+  }
+
+  async logout() {
+    await this.authService.logout();
+    this.router.navigate(['authorize']);
+  }
+
+  ngOnDestroy() {
+    this.dataService.cleanUp();
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 
 }
@@ -52,15 +71,14 @@ export class OverviewComponent implements OnInit {
   templateUrl: 'dialog-list-creator.html',
   styleUrls: ['./overview.component.scss']
 })
-export class CreateListDialog implements OnInit{
+export class CreateListDialog implements OnInit {
   listForm: FormGroup;
-
 
   constructor(
     public dialogRef: MatDialogRef<CreateListDialog>,
     @Inject(MAT_DIALOG_DATA) public data: List,
     private formBuilder: FormBuilder) {
-    }
+  }
 
   ngOnInit() {
     this.buildForm();
@@ -74,10 +92,6 @@ export class CreateListDialog implements OnInit{
   private buildForm(): void {
     this.listForm = this.formBuilder.group({
       'title': ['', [
-        Validators.required,
-      ]
-      ],
-      'description': ['', [
         Validators.required,
       ]
       ],
@@ -108,16 +122,12 @@ export class CreateListDialog implements OnInit{
 
   formErrors = {
     'title': '',
-    'description': '',
     'priority': '',
   };
 
   validationMessages = {
     'title': {
       'required': 'Bitte Titel eintragen!',
-    },
-    'description': {
-      'required': 'Bitte Beschreibung eintragen!',
     },
     'priority': {
       'required': 'Bitte Priorität auswählen!',

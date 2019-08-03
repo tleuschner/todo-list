@@ -1,19 +1,25 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormGroup, ReactiveFormsModule, FormBuilder, Validators, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { AuthService } from 'src/app/core/auth.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MessageService } from 'src/app/core/message.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators'
+import { ErrorStateMatcher } from '@angular/material/core';
 
 @Component({
   selector: 'app-login-signup',
   templateUrl: './login-signup.component.html',
-  styleUrls: ['./login-signup.component.scss']
+  styleUrls: ['../login/login.component.scss']
 })
-export class LoginSignupComponent implements OnInit {
+export class LoginSignupComponent implements OnInit, OnDestroy {
   userForm: FormGroup;
-  newUser: boolean = true;
+  destroy$: Subject<boolean> = new Subject<boolean>();
+  showSignup = true;
   passReset: boolean = false;
+  matcher = new ErrorStateMatcher();
+  hide = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -24,27 +30,32 @@ export class LoginSignupComponent implements OnInit {
 
   ngOnInit() {
     this.buildForm();
+    this.authService.getSignup().pipe(takeUntil(this.destroy$)).subscribe(signup => {
+      this.showSignup = signup;
+    });
   }
 
   toggleForm(): void {
-    this.newUser = !this.newUser;
+    this.authService.setSignup(false);
   }
 
-  async signUpLogin() {
-    if (this.newUser) {
-      await this.authService.emailSignUp(this.userForm.value['email'], this.userForm.value['passwordRegister']);
-      this.messageService.msg.subscribe(msg => this._snackBar.open(msg.content, 'Okay'));
-      await this.router.navigate(['/']);
-    } else {
-      await this.authService.emailLogin(this.userForm.value['email'], this.userForm.value['passwordLogin']);
-      this.messageService.msg.subscribe(msg => this._snackBar.open(msg.content, 'Okay'))
-    }
+  async signUp() {
+    await this.authService.emailSignUp(this.userForm.value['email'], this.userForm.value['passwordRegister']);
+    this.messageService.msg.pipe(takeUntil(this.destroy$)).subscribe(msg => this._snackBar.open(msg.content, 'Okay'));
+    await this.router.navigate(['/']);
   }
 
   signInWithGoogle() {
     this.authService.googleLogin().then(
       () => this.router.navigate(['/'])
     )
+  }
+
+  checkPasswords(group: FormGroup) { // here we have the 'passwords' group
+    let pass = group.controls.passwordRegister.value;
+    let confirmPass = group.controls.repeatPassword.value;
+
+    return pass === confirmPass ? null : { notSame: true }
   }
 
   private buildForm(): void {
@@ -60,16 +71,10 @@ export class LoginSignupComponent implements OnInit {
         Validators.maxLength(25)
       ]
       ],
-      'repeatPassword': ['', [
-      ]
-      ],
-      'passwordLogin': ['', [
-        //Validators.required
-      ]
-      ]
-    });
+      'repeatPassword': ['']
+    }, { validator: this.checkPasswords });
 
-    this.userForm.valueChanges.subscribe(data => this.onValueChanged(data));
+    this.userForm.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(data => this.onValueChanged(data));
     this.onValueChanged();
   }
 
@@ -91,7 +96,8 @@ export class LoginSignupComponent implements OnInit {
 
   formErrors = {
     'email': '',
-    'password': ''
+    'passwordRegister': '',
+    'repeatPassword': '',
   };
 
   validationMessages = {
@@ -105,9 +111,22 @@ export class LoginSignupComponent implements OnInit {
       'minlength': 'Das Passwort muss mindestens 6 Zeichen lang sein!',
       'maxlength': 'Das Passwort darf höchstens 25 Zeichen lang sein!'
     },
-    'passwordLogin': {
-      'required': 'Bitte Passwort eintragen',
+    'repeatPassword': {
+      'notSame': 'Die Passwörter stimmen nicht überein!'
     }
   }
 
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
+  }
+}
+
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    const invalidCtrl = !!(control && control.invalid && control.parent.dirty && control.touched);
+    const invalidParent = !!(control && control.parent && control.parent.invalid && control.parent.dirty && control.touched);
+
+    return (invalidCtrl || invalidParent);
+  }
 }

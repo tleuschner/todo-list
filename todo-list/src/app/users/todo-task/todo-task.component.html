@@ -1,11 +1,19 @@
-<mat-card class="add-padding" [class.done]="done">
-    <mat-card-title>
-        <h5>{{task.title}}</h5>
-    </mat-card-title>
-    <mat-card-content *ngIf="task.description">
-        <div class="description"> {{task.description}} </div>
-    </mat-card-content>
-    <mat-card-subtitle [class.overdue]="task.dueDate - now > 0">
-        Aufgabe zu erledigen bis {{todoList.remainingTasks}}
-    </mat-card-subtitle>
-</mat-card>
+<li class="grid">
+    <span class="description"> <span class="strikethrough" [class.strike]="task.done">{{task.title}}</span></span>
+    <span class="date">
+        <span *ngIf="task.dueDate">
+            {{task.dueDate | date }}
+        </span>
+        <span *ngIf="!task.dueDate">
+                <input class="hide-hack" [matDatepicker]="picker" placeholder="Datum wählen" (dateChange)="updateTaskDate($event)">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+        </span>
+    </span>
+    <span class="icons"><i class="material-icons clickable" (click)="delete()">
+            delete
+        </i>
+        <i class="material-icons clickable" [class.done]="task.done" (click)="completeTask()">
+            {{checkbox}}
+        </i></span>
+</li>
