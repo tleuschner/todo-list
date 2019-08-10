@@ -1,5 +1,7 @@
 <h1 class="heading">Task Runner</h1>
 
+<h3 class="heading warning" *ngIf="offline">Offline ist kein registrieren und anmelden möglich!</h3>
+
 <form [formGroup]="userForm" [hidden]="!showSignup" (ngSubmit)="signUp()">
     <mat-card>
         <mat-card-title>
@@ -32,8 +34,8 @@
                 </mat-form-field>
                 <div class="button-row">
                     <button mat-raised-button color="primary" type="submit"
-                        [disabled]="!userForm.valid">Registrieren</button>
-                    <button mat-raised-button color="primary" type="button" (click)="signInWithGoogle()">Mit Google
+                        [disabled]="!userForm.valid && offline">Registrieren</button>
+                    <button mat-raised-button color="primary" type="button" (click)="signInWithGoogle()" [disabled]="offline">Mit Google
                         anmelden</button>
                 </div>
             </mat-card-content>

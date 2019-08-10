@@ -4,14 +4,18 @@ import { redirectUnauthorizedTo, redirectLoggedInTo, canActivate } from '@angula
 
 import { OverviewComponent } from './users/overview/overview.component';
 import { LoginSignupComponent } from './users/login-signup/login-signup.component';
+import { TodoTaskComponent } from './users/todo-task/todo-task.component';
 
 const redirectLoggedInToOverview = redirectLoggedInTo(['/']);
 const redirectUnauthorizedToAuthorize = redirectUnauthorizedTo(['authorize']);
 
 
 const routes: Routes = [
-  { path: '', component: OverviewComponent, ...canActivate(redirectUnauthorizedToAuthorize) },
-  { path: 'authorize', component: LoginSignupComponent, ...canActivate(redirectLoggedInToOverview) }
+  // { path: '', component: OverviewComponent, canActivate: [AuthGuard] },
+  //{ path: 'authorize', component: LoginSignupComponent, canActivate: [RedirectLoggedInGuard]}
+  { path: '', component: OverviewComponent, ...canActivate(redirectUnauthorizedToAuthorize), data : {animation: 'ListPage'} },
+  { path: 'authorize', component: LoginSignupComponent, ...canActivate(redirectLoggedInToOverview)},
+  { path: 'list/:id/tasks', component: TodoTaskComponent, ...canActivate(redirectUnauthorizedToAuthorize), data : {animation: 'TaskPage'}}
 ];
 
 @NgModule({

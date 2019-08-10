@@ -1,3 +1,42 @@
+<div class="todo-container" *ngIf="tasks.length > 0">
+    <div class="task" *ngFor="let task of tasks">
+        <div class="task-description">
+            <span class="strikethrough" [ngClass]="task.done ? 'strike' : 'no-strike' ">
+                {{task.title}}
+            </span>
+        </div>
+        <div class="task-properties">
+            <span *ngIf="task.dueDate">
+                {{task.dueDate | date }}
+            </span>
+            <span *ngIf="!task.dueDate">
+                <input class="hide-hack" [matDatepicker]="picker" placeholder="Datum wählen"
+                    (dateChange)="updateTaskDate($event, task)">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </span>
+            <span class="icons">
+                <i class="material-icons clickable" (click)="delete(task)">
+                    delete
+                </i>
+                <i class="material-icons clickable" [class.done]="task.done" (click)="completeTask(task)">
+                    {{task.done ? "check_box" : "check_box_outline_blank"}}
+                </i>
+            </span>
+        </div>
+    </div>
+</div>
+
+<form class="todo-container">
+    <mat-form-field class="full-width">
+        <input #taskTitle matInput placeholder="Neue Aufgabe hinzufügen" autocomplete="off" (keyup.enter)="addTask()"
+            (blur)="addTask()" />
+    </mat-form-field>
+</form>
+
+
+
+<!-- 
 <li class="grid">
     <span class="description"> <span class="strikethrough" [class.strike]="task.done">{{task.title}}</span></span>
     <span class="date">
@@ -16,4 +55,4 @@
         <i class="material-icons clickable" [class.done]="task.done" (click)="completeTask()">
             {{checkbox}}
         </i></span>
-</li>
+</li> -->

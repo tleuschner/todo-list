@@ -10,12 +10,17 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { DataService } from 'src/app/core/data.service';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { CreateListDialog } from '../overview/overview.component';
+import { Router } from '@angular/router';
+import { slideInAnimation } from 'src/app/animations';
 
 
 @Component({
   selector: 'app-todo-list',
   templateUrl: './todo-list.component.html',
-  styleUrls: ['./todo-list.component.scss']
+  styleUrls: ['./todo-list.component.scss'],
+  animations: [
+    slideInAnimation
+  ]
 })
 
 export class TodoListComponent implements OnInit, OnDestroy {
@@ -32,6 +37,7 @@ export class TodoListComponent implements OnInit, OnDestroy {
 
   constructor(
     private dataService: DataService,
+    private router: Router,
     public dialog: MatDialog,
   ) { }
   public expand: boolean = false;
@@ -51,6 +57,10 @@ export class TodoListComponent implements OnInit, OnDestroy {
         }
         this.todoList.remainingTasks = tasks.length - this.todoList.doneTasks;
     });
+  }
+
+  showTasks() {
+    this.router.navigate(['list', this.todoList.listId, 'tasks'])
   }
 
 

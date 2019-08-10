@@ -20,6 +20,7 @@ export class LoginSignupComponent implements OnInit, OnDestroy {
   passReset: boolean = false;
   matcher = new ErrorStateMatcher();
   hide = false;
+  offline = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -33,6 +34,9 @@ export class LoginSignupComponent implements OnInit, OnDestroy {
     this.authService.getSignup().pipe(takeUntil(this.destroy$)).subscribe(signup => {
       this.showSignup = signup;
     });
+
+    window.addEventListener('online', () => {if(navigator.onLine) this.offline = false});
+    window.addEventListener('offline', () => {if(!navigator.onLine) this.offline = true});
   }
 
   toggleForm(): void {
@@ -117,6 +121,8 @@ export class LoginSignupComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    window.removeEventListener('online', () => console.log('removed online EventListener'));
+    window.removeEventListener('offline', () => console.log('removed offline EventListener'))
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
   }

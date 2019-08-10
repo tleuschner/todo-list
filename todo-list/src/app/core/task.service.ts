@@ -17,7 +17,7 @@ export class TaskService {
   constructor(
     private db: AngularFirestore,
     private angularFireAuth: AngularFireAuth,
-    private messageService: MessageService ) {
+    private messageService: MessageService) {
     this.angularFireAuth.authState.subscribe(user => {
       if (user) {
         this.userId = user.uid
@@ -33,11 +33,16 @@ export class TaskService {
   }
 
   getLists(): Observable<QuerySnapshot<List>> {
+    if (!this.userId) return;
     return this.userListRef.get();
   }
 
   updateList(updatedList: List) {
     this.userListRef.doc(updatedList.listId).set(updatedList);
+  }
+
+  updateListProperty(listId: string, updatedProperty: {}) {
+    this.userListRef.doc(listId).update(updatedProperty);
   }
 
   deleteList(listId: string) {
@@ -61,5 +66,5 @@ export class TaskService {
   deleteTask(taskId: string) {
     this.userTaskRef.doc(taskId).delete();
   }
-  
+
 }

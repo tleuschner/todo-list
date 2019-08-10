@@ -17,14 +17,75 @@ mat-card {
             background: $primary-main;
         }
         mat-card-subtitle {
-            background: $primary-light-threeq;
+            background: $primary-light;
         }
    }
 }
 
+
+.list-container {
+    width: 100%;
+    margin: 1em auto;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 5px 20px -10px rgba(0,0,0,1);
+    border-radius: 2px;
+
+    &:hover {
+        box-shadow: 2px 2px 17px 0px rgba(0,0,0,0.75);
+    }
+
+    .list-header {
+        color: rgba(255, 255, 255, 0.8);
+        background:rgba(15, 185, 177,1.0);
+        border-top-left-radius: 2px;
+        border-top-right-radius: 2px;
+        padding: 10px;
+
+        h1 {
+            margin: 0;
+        }
+    }
+
+    .list-footer {
+        background: rgba(43, 203, 186, 0.5);
+        color: rgba(255, 255, 255, 0.9);
+        padding: 4px 8px;
+        border-bottom-left-radius: 2px;
+        border-bottom-right-radius: 2px;
+        font-size: 14px
+    }
+
+
+    @media (min-width: 576px) {
+       max-width: 95%;
+    }
+  
+    @media (max-width: 576px) {
+     max-width: 95%;
+    }
+
+    // Medium devices (tablets, 768px and up)
+    @media (min-width: 768px) {
+     max-width: 95%;
+    }
+
+    // Large devices (desktops, 992px and up)
+    @media (min-width: 992px) {
+      max-width: 95%;
+    }
+
+    // Extra large devices (large desktops, 1200px and up)
+    @media (min-width: 1200px) {
+      max-width: 80%;
+    }
+}
+
+
+
 mat-card-title {
     color: rgba(255, 255, 255, 0.8);
-    background: $primary-main-threeq;
+    background: $primary-main;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
 }
@@ -35,6 +96,7 @@ mat-card-content {
     font-size: 16px;
     margin: 0;
     padding: 8px;
+    transform: translateX(0, 200px);
 }
 
 mat-card-subtitle {

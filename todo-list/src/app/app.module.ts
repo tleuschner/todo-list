@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, LOCALE_ID } from '@angular/core';
-import { NgModel } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { environment } from "../environments/environment";
@@ -30,6 +29,8 @@ import { TodoTaskComponent } from './users/todo-task/todo-task.component';
 import { AuthService } from './core/auth.service';
 import { AuthGuard } from './core/auth.guard';
 import { LoginComponent } from './users/login/login.component';
+import { HeaderComponent } from './header/header.component';
+import { FooterComponent } from './footer/footer.component';
 
 registerLocaleData(localeDe);
 
@@ -43,14 +44,17 @@ registerLocaleData(localeDe);
     CreateListDialog,
     LoginComponent,
     DeleteDialog,
+    HeaderComponent,
+    FooterComponent,
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
+    NoopAnimationsModule,
     AppRoutingModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule.enablePersistence(),
-    BrowserAnimationsModule,
     ReactiveFormsModule,
     MaterialModule,
     FormsModule,

@@ -70,6 +70,17 @@ export class DataService {
     this.lists$.next(this.lists);
   }
 
+  updateToDoListProperty(listId: string, property: {}) {
+    this.lists.forEach((list: List, index) => {
+      let updateProperty = Object.keys(property)[0];
+      if (list.listId === listId)
+      //@ts-ignore
+        this.lists[index].updateProperty = property.updateProperty;
+    });
+    this.taskService.updateListProperty(listId, property);
+    this.lists$.next(this.lists);
+  }
+
   deleteToDoList(listToDelete: List) {
     this.taskService.deleteList(listToDelete.listId)
     this.lists = this.lists.filter((list: List) => list.listId !== listToDelete.listId);

@@ -1,12 +1,9 @@
 .container {
     display: flex;
     flex-direction: column;
-    margin: 0 auto;
-    max-width: 80vw;
-  }
-  
-  .example-container > * {
-    width: 100%;
+    margin: 3em auto;
+    overflow: hidden;
+
   }
 
     

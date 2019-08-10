@@ -1,10 +1,3 @@
-<div class="space-between">
-    <h1>Deine ToDos {{userEmail}}</h1>
-    <button type="button" (click)="logout()" mat-raised-button color="primary">Logout</button>
-</div>
-
-
-<br><br>
 <div *ngIf="todoLists">
     <div *ngFor="let list of todoLists">
         <app-todo-list [todoList]="list"></app-todo-list>
@@ -15,4 +8,3 @@
     <h2>Erstelle deine erste Liste! Klicke dazu den <i class="material-icons size-large" (click)="createList()">add_circle_outline</i> Button an!</h2>
 </div>
 
-<div class="centered"><i class="material-icons md-48" (click)="createList()">add_circle_outline</i></div>

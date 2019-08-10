@@ -1,4 +1,17 @@
-<mat-card class="list" [class.isActive]="showTodos">
+<div class="list-container clickable" (click)="showTasks()">
+    <div class="list-header">
+        <div class="list-header">
+            <h1>{{todoList.title}}</h1>
+        </div>
+    </div>
+    <div class="list-footer">
+        {{todoList.remainingTasks}} zu erledigen, {{overdue}} überfällig
+    </div>
+</div>
+
+
+
+<!-- <mat-card class="list" [class.isActive]="showTodos">
     <mat-card-title (click)="toggleTodos()" class="clickable flex-full-width no-margin">
         <h4>{{todoList.title}}</h4>
         <div class="centered"><i class="material-icons md-48">{{icon}}</i></div>
@@ -28,4 +41,4 @@
     <mat-card-subtitle class="no-margin">
         {{todoList.remainingTasks}} zu erledigen, {{overdue}} überfällig
     </mat-card-subtitle>
-</mat-card>
+</mat-card> -->
