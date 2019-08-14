@@ -1,34 +1,30 @@
 import { Component, OnInit, Input, OnDestroy, ViewChild, ElementRef, Inject } from '@angular/core';
 import { List } from 'src/app/models/list.model';
 import { Task } from 'src/app/models/task.model';
-import { trigger, transition, animate, style } from '@angular/animations';
-import { MessageService } from 'src/app/core/message.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { DataService } from 'src/app/core/data.service';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
-import { CreateListDialog } from '../overview/overview.component';
-import { Router } from '@angular/router';
-import { slideInAnimation } from 'src/app/animations';
+import { Router, NavigationEnd } from '@angular/router';
+// import { slideInAnimation } from 'src/app/animations';
 
 
 @Component({
   selector: 'app-todo-list',
   templateUrl: './todo-list.component.html',
   styleUrls: ['./todo-list.component.scss'],
-  animations: [
-    slideInAnimation
-  ]
+  // animations: [
+  //   slideInAnimation
+  // ]
 })
 
 export class TodoListComponent implements OnInit, OnDestroy {
-  @Input() todoList: List;
-  @ViewChild('taskTitle', { static: false }) taskTitle: ElementRef;
+  @ViewChild('listTitle', { static: true }) listTitle: ElementRef;
 
-  tasks: Task[] = [];
-  task: Task = {};
+  todoLists: List[] = undefined;
+  tasks: Task[];
+  list: List = {};
   showTodos = false;
   icon = 'expand_more';
   overdue: number = 0;
@@ -43,24 +39,20 @@ export class TodoListComponent implements OnInit, OnDestroy {
   public expand: boolean = false;
 
   ngOnInit() {
-    this.dataService.getTasks().pipe(takeUntil(this.destroy$)).subscribe((tasks: Task[]) => {
-      this.tasks = tasks
-        .filter(task => task.listId == this.todoList.listId)
-        .sort((a: Task, b: Task) => a.order - b.order);
+    if (this.dataService.isInitialized === false) { this.dataService.initalize(); }
 
-        this.todoList.doneTasks = 0;
-        this.overdue = 0;
-        let now = Date.now();
-        for(let task of this.tasks) {
-          if(task.done) this.todoList.doneTasks++;
-          if(!task.done && task.dueDate && (task.dueDate - now <=0)) this.overdue++;
-        }
-        this.todoList.remainingTasks = tasks.length - this.todoList.doneTasks;
+    this.dataService.getTodoLists().pipe(takeUntil(this.destroy$)).subscribe((lists: List[]) => {
+      this.todoLists = lists.sort((a: List, b: List) => a.created - b.created);
     });
+    this.dataService.getTasks().pipe(takeUntil(this.destroy$)).subscribe((tasks: Task[]) => {
+      this.tasks = tasks;
+      this.updateListProps(this.todoLists);
+    });
+    this.dataService.setInput(this.listTitle);
   }
 
-  showTasks() {
-    this.router.navigate(['list', this.todoList.listId, 'tasks'])
+  showTasks(list) {
+    this.router.navigate(['list', list.listId, 'tasks'])
   }
 
 
@@ -70,52 +62,65 @@ export class TodoListComponent implements OnInit, OnDestroy {
     else this.icon = "expand_more";
   }
 
-  addTask() {
-    this.task = {};
-    let taskTitle = this.taskTitle.nativeElement.value;
-    if (taskTitle.length > 0) {
-      this.taskTitle.nativeElement.value = "";
-      this.task.title = taskTitle;
-      this.task.done = false;
-      this.task.listId = this.todoList.listId;
-      this.task.created = Date.now();
-      this.task.order = this.tasks.length;
-      this.dataService.createTask(this.task, this.todoList);
+  addList() {
+    this.list = {};
+    let listTitle = this.listTitle.nativeElement.value;
+    if (listTitle.length > 0) {
+      this.listTitle.nativeElement.value = "";
+      this.list.title = listTitle;
+      this.list.created = Date.now();
+      this.list.remainingTasks = 0;
+      this.list.doneTasks = 0;
+      this.list.taskCount = 0;
+      this.list.priority = 5;
+      this.list.overdue = 0;
+      this.dataService.createToDoList(this.list);
     }
   }
 
-  drop(event: CdkDragDrop<Task[]>) {
-    moveItemInArray(this.tasks, event.previousIndex, event.currentIndex);
-    this.updateTaskArray();
-  }
-
-  delete() {
+  delete(list: List) {
     const dialogRef = this.dialog.open(DeleteDialog, {
       width: '90vw',
       maxWidth: '700px',
-      data: this.todoList.title,
+      data: list.title,
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        for (const task of this.tasks) {
+        let listTasks = this.tasks.filter(task => task.listId == list.listId);
+
+        for (const task of listTasks) {
           this.dataService.deleteTask(task);
         }
-        this.dataService.deleteToDoList(this.todoList);
+        this.dataService.deleteToDoList(list);
+
       }
     });
   }
 
+  updateListProps(lists: List[]) {
+    for (const list of lists) {
+      let listTasks = this.tasks.filter(task => task.listId == list.listId);
+      let overdue = 0;
+      let doneTasks = 0;
+      let now = Date.now();
+      for (let task of listTasks) {
+        if (task.done) doneTasks++;
+        if (!task.done && task.dueDate && (task.dueDate - now <= 0)) overdue++;
+      }
+      list.remainingTasks = listTasks.length - doneTasks;
+      list.taskCount = listTasks.length;
+      list.overdue = overdue;
+      list.doneTasks = doneTasks;
+      this.dataService.updateToDoList(list);
+    }
+  }
+
+
+
   ngOnDestroy() {
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
-  }
-
-  private updateTaskArray() {
-    this.tasks.forEach((task, index) => {
-      task.order = index;
-      this.dataService.updateTask(task);
-    });
   }
 }
 
@@ -129,8 +134,8 @@ export class TodoListComponent implements OnInit, OnDestroy {
                 </div>
             </div>`,
 })
-export class DeleteDialog { 
+export class DeleteDialog {
   constructor(
     @Inject(MAT_DIALOG_DATA) public title: string,
-  ) {}
+  ) { }
 }

@@ -45,13 +45,16 @@ export class LoginSignupComponent implements OnInit, OnDestroy {
 
   async signUp() {
     await this.authService.emailSignUp(this.userForm.value['email'], this.userForm.value['passwordRegister']);
-    this.messageService.msg.pipe(takeUntil(this.destroy$)).subscribe(msg => this._snackBar.open(msg.content, 'Okay'));
-    await this.router.navigate(['/']);
+    await this.messageService.msg.pipe(takeUntil(this.destroy$)).subscribe(msg => this._snackBar.open(msg.content, 'Okay'));
+    this.authService.currentUserObservable.pipe(takeUntil(this.destroy$)).subscribe(async res => {
+      if(res != null)  await this.router.navigate(['/lists']);
+    })
+   
   }
 
   signInWithGoogle() {
     this.authService.googleLogin().then(
-      () => this.router.navigate(['/'])
+      () => this.router.navigate(['/lists'])
     )
   }
 

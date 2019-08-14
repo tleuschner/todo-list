@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { auth} from 'firebase';
+import { auth } from 'firebase';
 import { AngularFireAuth } from '@angular/fire/auth';
 import {
   AngularFirestore,
@@ -16,7 +16,7 @@ import { MessageService } from './message.service';
 })
 export class AuthService {
   user: Observable<User | null>;
-  signupSubject$ = new BehaviorSubject<boolean>(true); 
+  signupSubject$ = new BehaviorSubject<boolean>(true);
 
   constructor(
     private angularFireAuth: AngularFireAuth,
@@ -33,6 +33,23 @@ export class AuthService {
         }
       })
     );
+  }
+
+  //Anonymous
+  anonLogin(): Promise<unknown> {
+    return new Promise((resolve, reject) => {
+      this.angularFireAuth.auth.signInAnonymously()
+        .then(credentials => {
+          this.messageService.update('Erfolgreich eingeloggt', 'success');
+          resolve(this.updateUserData(credentials.user));
+        }
+        ).catch(error => {
+          this.messageService.update(error.message, 'error');
+          this.handleError(error);
+          reject(error);
+        })
+    })
+
   }
 
   //OAuth methods
@@ -58,29 +75,29 @@ export class AuthService {
 
   emailSignUp(email: string, password: string) {
     this.angularFireAuth.auth
-    .createUserWithEmailAndPassword(email, password)
-    .then(credentials => {
-      this.messageService.update('Erfolgreich registriert', 'success');
-      return this.updateUserData(credentials.user);
-    })
-    .catch(error => {
-      this.messageService.update(error.message, 'error');
-      this.handleError(error)
-    });
+      .createUserWithEmailAndPassword(email, password)
+      .then(credentials => {
+        this.messageService.update('Erfolgreich registriert', 'success');
+        return this.updateUserData(credentials.user);
+      })
+      .catch(error => {
+        this.messageService.update(error.message, 'error');
+        this.handleError(error)
+      });
   }
 
   emailLogin(email: string, password: string) {
     return this.angularFireAuth.auth
-    .signInWithEmailAndPassword(email, password)
-    .then(crendentials => {
-      this.messageService.update('Erfolgreich eingeloggt', 'success');
-      return this.updateUserData(crendentials.user);
-    })
-    .catch(error => {
-      this.messageService.update(error.message, 'error');
-      this.handleError(error)
-      return true;
-    });
+      .signInWithEmailAndPassword(email, password)
+      .then(crendentials => {
+        this.messageService.update('Erfolgreich eingeloggt', 'success');
+        return this.updateUserData(crendentials.user);
+      })
+      .catch(error => {
+        this.messageService.update(error.message, 'error');
+        this.handleError(error)
+        return true;
+      });
   }
 
   logout() {
@@ -91,7 +108,7 @@ export class AuthService {
     return this.angularFireAuth.auth !== null;
   }
 
-  get currentUserObservable(): any {
+  get currentUserObservable(): Observable<firebase.User> {
     return this.angularFireAuth.authState;
   }
 

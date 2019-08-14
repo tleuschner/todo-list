@@ -1,52 +1,39 @@
-import { trigger, transition, style, query, animate, animateChild, group } from '@angular/animations';
-
-// export const slideInAnimation =
-//     trigger('routeAnimations', [
-//         transition('ListPage <=> TaskPage', [
-//             style({ position: 'relative' }),
-//             query(':enter, :leave', [
-//                 style({
-//                     position: 'absolute',
-//                     top: 0,
-//                     left: 0,
-//                     width: '100%'
-//                 }),
-//                 query(':enter', [
-//                     style({ left: '-100%' }),
-//                     animate('350ms ease-in-out')
-//                 ]),
-//                 query(':enter', [
-//                     style({ left: '0%' }),
-//                     animate('350ms ease-in-out')
-//                 ]),
-//             ]),
-//         ])
-//     ]);
+import { trigger, transition, style, query, animate, group } from '@angular/animations';
 
 export const slideInAnimation =
     trigger('routeAnimations', [
-        transition('ListPage <=> TaskPage', [
-            style({ position: 'relative' }),
-            query(':enter, :leave', [
-                style({
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%'
-                })
-            ], { optional: true }),
-            query(':enter', [
-                style({ left: '-100%' })
-            ]),
-            query(':leave', animateChild(), { optional: true }),
+        transition('TaskPage => *', [
+            query(':enter, :leave',
+                style({ position: 'fixed', width: '100%' }),
+                { optional: true }),
             group([
-                query(':leave', [
-                    animate('400ms ease-out', style({ left: '100%' }))
-                ], { optional: true }),
                 query(':enter', [
-                    animate('400ms ease-out', style({ left: '0%' }))
-                ])
-            ]),
-            query(':enter', animateChild()),
-        ])
+                    style({ transform: 'translateX(-100%)' }),
+                    animate('0.3s ease-in-out',
+                        style({ transform: 'translateX(0%)' }))
+                ], { optional: true }),
+                query(':leave', [
+                    style({ transform: 'translateX(0%)' }),
+                    animate('0.3s ease-in-out',
+                        style({ transform: 'translateX(100%)' }))
+                ], { optional: true }),
+            ])
+        ]),
+        transition('ListPage => *', [
+            query(':enter, :leave',
+                style({ position: 'fixed', width: '100%' }),
+                { optional: true }),
+            group([
+                query(':enter', [
+                    style({ transform: 'translateX(100%)' }),
+                    animate('0.3s ease-in-out',
+                        style({ transform: 'translateX(0%)' }))
+                ], { optional: true }),
+                query(':leave', [
+                    style({ transform: 'translateX(0%)' }),
+                    animate('0.3s ease-in-out',
+                        style({ transform: 'translateX(-100%)' }))
+                ], { optional: true }),
+            ])
+        ]),
     ]);

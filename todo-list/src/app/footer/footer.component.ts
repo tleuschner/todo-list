@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Route, Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { Component, OnInit, ElementRef } from '@angular/core';
 import { DataService } from '../core/data.service';
 import { Location } from '@angular/common';
+import { AuthService } from '../core/auth.service';
 
 @Component({
   selector: 'app-footer',
@@ -9,20 +9,28 @@ import { Location } from '@angular/common';
   styleUrls: ['./footer.component.scss']
 })
 export class FooterComponent implements OnInit {
-  addTask = false;
+  inputField: ElementRef;
+  loggedIn = false;
 
   constructor(
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
     private _location: Location,
     private dataService: DataService,
+    private authService: AuthService,
   ) { }
 
   ngOnInit() {
-    this.activatedRoute.paramMap.subscribe((params: ParamMap) => {
-      if(params.get('id') != undefined) this.addTask = true;
-      else this.addTask = false;
-    })
+    this.dataService.getInput().subscribe(input => {
+      this.inputField = input;
+    });
+
+    this.authService.currentUserObservable.subscribe(res => {
+      if(res != null) this.loggedIn = true;
+      else this.loggedIn = false;
+    });
+  }
+
+  create() {
+    this.inputField.nativeElement.focus();
   }
 
   goBack() {

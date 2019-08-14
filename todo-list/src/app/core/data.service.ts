@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ElementRef } from '@angular/core';
 import { TaskService } from './task.service';
 import { List } from '../models/list.model';
 import { Task } from '../models/task.model';
-import { Subject, Observable } from 'rxjs';
+import { Subject, Observable, BehaviorSubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { QueryDocumentSnapshot } from '@angular/fire/firestore';
 
@@ -18,8 +18,11 @@ export class DataService {
   private lists: List[];
 
   private destroy$ = new Subject<boolean>();
-  private lists$ = new Subject<List[]>();
-  private tasks$ = new Subject<Task[]>();
+  private lists$ = new BehaviorSubject<List[]>([]);
+  private tasks$ = new BehaviorSubject<Task[]>([]);
+  private input$ = new Subject<ElementRef>();
+
+  private initalized = false;
 
   constructor(
     private taskService: TaskService,
@@ -28,6 +31,7 @@ export class DataService {
 
 
   initalize() {
+    console.log('init')
     this.destroy$.next(false);
     this.taskService.getLists().pipe(takeUntil(this.destroy$)).subscribe(res => {
       this.lists = [];
@@ -48,6 +52,21 @@ export class DataService {
       });
       this.tasks$.next(this.tasks);
     });
+    this.initalized = true;
+  }
+
+  //check if this has already been called
+  get isInitialized(): boolean {
+    return this.initalized;
+  }
+
+  //Access input field throughout components
+  setInput(input: ElementRef) {
+    this.input$.next(input);
+  }
+
+  getInput(): Observable<ElementRef> {
+    return this.input$.asObservable();
   }
 
   createToDoList(list: List) {
@@ -68,17 +87,8 @@ export class DataService {
     });
     this.taskService.updateList(listToUpdate);
     this.lists$.next(this.lists);
-  }
+    console.log('updating', this.lists)
 
-  updateToDoListProperty(listId: string, property: {}) {
-    this.lists.forEach((list: List, index) => {
-      let updateProperty = Object.keys(property)[0];
-      if (list.listId === listId)
-      //@ts-ignore
-        this.lists[index].updateProperty = property.updateProperty;
-    });
-    this.taskService.updateListProperty(listId, property);
-    this.lists$.next(this.lists);
   }
 
   deleteToDoList(listToDelete: List) {
@@ -114,6 +124,7 @@ export class DataService {
   }
 
   cleanUp() {
+    this.initalized = false;
     this.destroy$.next(true);
   }
 

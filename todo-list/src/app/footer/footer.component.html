@@ -1,10 +1,10 @@
 <footer>
-    <div class="centered">
+    <div class="centered clickable"  (click)="create()" *ngIf="loggedIn">
         <span class="circle"></span>
-        <i class="material-icons md-24" (click)="createList()">add</i>
+        <i class="material-icons md-24">add</i>
     </div>
-    <div class="right">
-        <i class="material-icons md-24" (click)="goBack()">arrow_back</i>
+    <div class="right clickable" (click)="goBack()" *ngIf="loggedIn">
+        <i class="material-icons md-24">arrow_back</i>
         <span class="description">Go Back</span>
     </div>
 </footer>

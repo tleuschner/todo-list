@@ -1,7 +1,7 @@
 <div class="todo-container" *ngIf="tasks.length > 0">
     <div class="task" *ngFor="let task of tasks">
         <div class="task-description">
-            <span class="strikethrough" [ngClass]="task.done ? 'strike' : 'no-strike' ">
+            <span class="strikethrough" [ngClass]="task.done ? 'strike' : '' ">
                 {{task.title}}
             </span>
         </div>
@@ -27,7 +27,7 @@
     </div>
 </div>
 
-<form class="todo-container">
+<form class="todo-container extra-padding">
     <mat-form-field class="full-width">
         <input #taskTitle matInput placeholder="Neue Aufgabe hinzufügen" autocomplete="off" (keyup.enter)="addTask()"
             (blur)="addTask()" />

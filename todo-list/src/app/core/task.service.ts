@@ -45,9 +45,8 @@ export class TaskService {
     this.userListRef.doc(listId).update(updatedProperty);
   }
 
-  deleteList(listId: string) {
-    //ToDo delete Tasks that are in this list
-    this.userListRef.doc(listId).delete();
+  async deleteList(listId: string) {
+    await this.userListRef.doc(listId).delete();
   }
 
   createTask(listId: string, task: Task) {
@@ -63,8 +62,8 @@ export class TaskService {
     this.userTaskRef.doc(updatedTask.taskId).set(updatedTask);
   }
 
-  deleteTask(taskId: string) {
-    this.userTaskRef.doc(taskId).delete();
+  async deleteTask(taskId: string) {
+    await this.userTaskRef.doc(taskId).delete();
   }
 
 }

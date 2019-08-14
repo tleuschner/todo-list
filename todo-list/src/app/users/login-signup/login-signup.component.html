@@ -1,53 +1,42 @@
-<h1 class="heading">Task Runner</h1>
-
 <h3 class="heading warning" *ngIf="offline">Offline ist kein registrieren und anmelden möglich!</h3>
 
-<form [formGroup]="userForm" [hidden]="!showSignup" (ngSubmit)="signUp()">
-    <mat-card>
-        <mat-card-title>
+<div class="container">
+    <form [formGroup]="userForm" [hidden]="!showSignup" (ngSubmit)="signUp()">
+        <div class="login-heading">
             <h3>Registrieren</h3>
-        </mat-card-title>
-        <div class="padding">
-            <mat-card-subtitle>
-                <button class="color-secondary" type="button" mat-raised-button (click)="toggleForm()">Bereits
-                    registriert?</button>
-            </mat-card-subtitle>
-            <mat-card-content>
-                <mat-form-field>
-                    <label for="email"></label>
-                    <input matInput type="email" placeholder="Email eingeben" formControlName="email" required>
-                    <mat-error *ngIf="formErrors.email">{{ formErrors.email }}</mat-error>
-                </mat-form-field>
-
-                <mat-form-field>
-                    <label for="password"></label>
-                    <input matInput [type]="!hide ? 'password' : 'text'" placeholder="Passwort eingeben"
-                        formControlName="passwordRegister" required>
-                    <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' :'visibility_off'}}</mat-icon>
-                    <mat-error *ngIf="formErrors.passwordRegister">{{ formErrors.passwordRegister }}</mat-error>
-                </mat-form-field>
-                <mat-form-field>
-                    <label for="repeatPassword"></label>
-                    <input matInput type="password" placeholder="Passwort wiederholen" formControlName="repeatPassword"
-                        [errorStateMatcher]="matcher" required>
-                    <mat-error *ngIf="userForm.hasError('notSame')">Die Passwörter müssen übereinstimmen</mat-error>
-                </mat-form-field>
-                <div class="button-row">
-                    <button mat-raised-button color="primary" type="submit"
-                        [disabled]="!userForm.valid && offline">Registrieren</button>
-                    <button mat-raised-button color="primary" type="button" (click)="signInWithGoogle()" [disabled]="offline">Mit Google
-                        anmelden</button>
-                </div>
-            </mat-card-content>
+            <button color="primary" type="button" mat-raised-button (click)="toggleForm()">Bereits
+                registriert?</button>
         </div>
-    </mat-card>
-</form>
+
+        <mat-form-field>
+            <label for="email"></label>
+            <input matInput type="email" placeholder="Email eingeben" formControlName="email" required>
+            <mat-error *ngIf="formErrors.email">{{ formErrors.email }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <label for="password"></label>
+            <input matInput [type]="!hide ? 'password' : 'text'" placeholder="Passwort eingeben"
+                formControlName="passwordRegister" required>
+            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' :'visibility_off'}}</mat-icon>
+            <mat-error *ngIf="formErrors.passwordRegister">{{ formErrors.passwordRegister }}</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <label for="repeatPassword"></label>
+            <input matInput type="password" placeholder="Passwort wiederholen" formControlName="repeatPassword"
+                [errorStateMatcher]="matcher" required>
+            <mat-error *ngIf="userForm.hasError('notSame')">Die Passwörter müssen übereinstimmen</mat-error>
+        </mat-form-field>
+        <div class="button-row">
+            <button mat-raised-button color="primary" type="submit"
+                [disabled]="!userForm.valid || offline">Registrieren</button>
+            <button mat-raised-button color="primary" type="button" (click)="signInWithGoogle()"
+                [disabled]="offline">Mit
+                Google
+                anmelden</button>
+        </div>
+    </form>
+</div>
+
 
 <app-login></app-login>
-
-<p class="black-text">Es ist soweit! Erhalte die Kontrolle über dein Leben zurück!</p>
-
-<p class="black-text">
-    Vergiss nie wieder eine wichtige Aufgabe und organisiere sowie optimiere dich selbst.
-    Es war nie einfacher, jetzt registrieren und profitieren.
-</p>

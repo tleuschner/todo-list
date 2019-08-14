@@ -1,44 +1,21 @@
-<div class="list-container clickable" (click)="showTasks()">
-    <div class="list-header">
-        <div class="list-header">
-            <h1>{{todoList.title}}</h1>
+<div>
+    <div class="list-container responsive" *ngFor="let list of todoLists">
+        <div class="list-header clickable" (click)="showTasks(list)">
+            <h1>{{list.title}}</h1>
         </div>
-    </div>
-    <div class="list-footer">
-        {{todoList.remainingTasks}} zu erledigen, {{overdue}} überfällig
+        <div class="list-footer">
+            <span class="clickable" (click)="showTasks(list)">{{list.remainingTasks}} zu erledigen, {{list.overdue}} überfällig</span>
+            <i class="material-icons clickable" (click)="delete(list)"> delete </i>
+        </div>
     </div>
 </div>
 
 
-
-<!-- <mat-card class="list" [class.isActive]="showTodos">
-    <mat-card-title (click)="toggleTodos()" class="clickable flex-full-width no-margin">
-        <h4>{{todoList.title}}</h4>
-        <div class="centered"><i class="material-icons md-48">{{icon}}</i></div>
-    </mat-card-title>
-    <mat-card-content *ngIf="showTodos">
-        <div *ngIf="tasks" cdkDropList (cdkDropListDropped)="drop($event)">
-            <div *ngFor="let task of tasks" cdkDrag>
-                <app-todo-task [task]="task"></app-todo-task>
-            </div>
-        </div>
-        <form>
-            <mat-form-field class="full-width">
-                <input #taskTitle matInput placeholder="Neue Aufgabe hinzufügen" autocomplete="off"
-                    (keyup.enter)="addTask()" (blur)="addTask()" />
-            </mat-form-field>
-        </form>
-        <div class="flex-full-width pull-right">
-            <span class="center-vertically">
-                <i class="material-icons clickable" (click)="delete()"> delete </i>
-            </span>
-            <span style="padding-left: 1em"></span>
-            <span class="center-vertically">
-                <i class="material-icons clickable" (click)="settings()"> settings </i>
-            </span>
-        </div>
-    </mat-card-content>
-    <mat-card-subtitle class="no-margin">
-        {{todoList.remainingTasks}} zu erledigen, {{overdue}} überfällig
-    </mat-card-subtitle>
-</mat-card> -->
+<div class="responsive">
+    <form>
+        <mat-form-field class="full-width">
+            <input #listTitle matInput placeholder="Neue Liste hinzufügen" autocomplete="off" (keyup.enter)="addList()"
+                (blur)="addList()" />
+        </mat-form-field>
+    </form>
+</div>

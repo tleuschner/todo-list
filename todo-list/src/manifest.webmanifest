@@ -1,7 +1,7 @@
 {
-  "name": "TaskRunner",
-  "short_name": "TaskRunner",
-  "theme_color": "#1976d2",
+  "name": "Task Runner",
+  "short_name": "Task Runner",
+  "theme_color": "#778ca3",
   "background_color": "#fafafa",
   "display": "standalone",
   "scope": "/",

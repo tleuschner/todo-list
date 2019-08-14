@@ -7,45 +7,19 @@
     visibility: hidden;
 }
 
-@keyframes strikethrough {
-	from {
-		transform: scaleX(0);
-	}
-	to {
-		transform: scaleX(1);
-	}
-}
-
-@keyframes strikeback {
-    from {
-        transform: scaleX(1)
-    }
-    to {
-        transform: scaleX(0);
-    }
-}
 
 .strikethrough {
-	display: inline-block;
 	position: relative;
-    transition: all 0.2s ease-in-out;
-    
-    &.strike:after{
-        content: '';
-        position: absolute;
-        display: block;
-        width: 100%;
-        height: 2px;
-        margin-top: -0.8em;
-        background: black;  
-        transform-origin: center left;
-        animation: strikethrough .2s ease-in-out; 
+ 
+    &.strike{
+        text-decoration: line-through;
     }
 }
 
 .todo-container {
     display: flex;
     flex-direction: column;
+    padding: 1em 0;
     margin: 0 auto;
     @media (min-width: 576px) {
         max-width: 95%;
@@ -80,18 +54,21 @@
     .task-description {
 
         @media (min-width: 576px) {
-            max-width: 50%;
+            min-width: 50%;
          }
        
          @media (max-width: 576px) {
-          max-width: 40%;
+          min-width: 40%;
          }
      
          // Medium devices (tablets, 768px and up)
          @media (min-width: 768px) {
-          max-width: 70%;
+          min-width: 70%;
          }
+
+        display: inline-block;
         overflow-wrap: break-word; 
+        word-wrap: break-word;
         padding: 1em;
         line-height: 1.5;
     }

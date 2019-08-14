@@ -8,4 +8,5 @@ export class List {
     description?: string;
     listId?: string;
     taksIds?: string[];
+    overdue?: number;
 }
